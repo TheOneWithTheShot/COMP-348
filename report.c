@@ -57,7 +57,7 @@ void generateReport(char *target) {
 	for (int i = 0; i < nbFiles; i++ ) {
 		if(fileCountArray[i].nbOfChanges == 0) 
 			break;
-                printf("%d		%s\n", fileCountArray[ix].nbOfChanges, fileCountArray[ix].fileName + 2);
+                printf("%d		%s\n", fileCountArray[i].nbOfChanges, fileCountArray[i].fileName + 2);
         }
 }	
 
