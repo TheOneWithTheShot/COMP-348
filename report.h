@@ -14,6 +14,7 @@
 
 void generateReport(char *target);
 
+void freeReport();
 
 //struct that holds 2 variables, nbOfChanges & fileName
 struct file_count
