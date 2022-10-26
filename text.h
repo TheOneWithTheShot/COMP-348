@@ -1,11 +1,21 @@
-#ifndef TEXT_H
-#define TEXT_H
-
 /**
- * Capitalizes all the instances of a given word in the file
- * @param file File to search in
- * @param word Word to capitalize
- */
-void replaceFile(const char* file, const char* word);
+* @file text.h
+* @author Xavier Guertin
+* Student ID: 40213525
+* @date 8 october 2022
+*
+*
+* text.c's header file
+*/
 
-#endif //TEXT_H
+
+#ifndef TEXT_H_
+#define TEXT_H_
+
+int replace(char *fileName, char *target);
+
+void s_to_lower(char *s);
+void s_to_uppwer(char *s);
+
+#endif /* TEXT_H_ */
+

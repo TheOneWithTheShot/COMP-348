@@ -1,11 +1,11 @@
-Xavier Guertin
-40213525
-COMP 348
-Assignment 1
-October 8th 2022
+Xavier Guertin 40213525 COMP 348 Assignment 1 October 8th 2022
 
-Must be run from a command line interface
-Can be compiled with gcc replace.c traversal.c text.c report.c
-When run, a single argument must be passed as the word to look for and replace/capitalize
-The files to look at MUST be text files, and in the root and subfolders of the run folder
-If a file a.out is in the folders being looked at, it will be excluded from the analysis
+In order to compile the project, the following command line must be run:
+
+gcc -Wall replace.c traversal.c text.c report.c
+
+To make sure that the process works correctly, you must make sure that the files you want to modify are TXT files. 
+They can be located in the same directory as the project or in subfolders. 
+
+After compiling the program, enter the following command line to run the process:
+./a.out "desiredString"

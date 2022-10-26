@@ -1,26 +1,31 @@
-#ifndef REPORT_H
-#define REPORT_H
-
 /**
- * Initialize the reports data structure
- */
-void initializeReports();
+* @file report.h
+* @author Xavier Guertin
+* Student ID: 40213525
+* @date 8 october 2022
+*
+* 
+* report.c's header file
+*/
 
-/**
- * Free the allocated reports memory
- */
-void freeReports();
 
-/**
- * Print the recorded reports
- */
-void printReport();
+#ifndef REPORT_H_ 
+#define REPORT_H_
 
-/**
- * Add file Report
- * @param fileName File name to report
- * @param amount   Amount of changes made
- */
-void addModification(const char* fileName, size_t amount);
+void generateReport(char *target);
 
-#endif //REPORT_H
+
+//struct that holds 2 variables, nbOfChanges & fileName
+struct file_count
+{
+    int nbOfChanges; //counter of nbOfChanges made by replace() from text.c to each file
+    char* fileName; //filename with relative location
+};
+
+
+extern struct file_count* fileCountArray;
+
+extern int nbFiles;
+extern int allocatedSize;
+
+#endif /* REPORT_H_ */

@@ -1,12 +1,20 @@
-#ifndef TRAVERSAL_H
-#define TRAVERSAL_H
-
 /**
- * Traverses a directory and lists all the files/directories present, then capitalizes
- * all instances of the specified word, and analyzes nested directories recursively
- * @param directory Directory to analyze
- * @param word      Word to capitalize
- */
-void traverseDir(const char* directory, const char* word);
+* @file traversal.h
+* @author Xavier Guertin
+* Student ID: 40213525
+* @date 8 october 2022
+*
+*
+* traversal.c's header file
+*/
 
-#endif //TRAVERSAL_H
+
+#ifndef TRAVERSAL_H_
+#define TRAVERSAL_H_
+
+void add_fname_to_fcount_array(char *s, int c);
+
+void traverseDirectory(char *current, char *target);
+
+#endif /* TRAVERSAL_H_ */
+
