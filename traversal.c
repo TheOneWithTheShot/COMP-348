@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "traversal.h"
-#include "replace.h"
 #include "text.h"
 #include "report.h"
 

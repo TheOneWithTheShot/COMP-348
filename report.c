@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "replace.h"
 #include "report.h"
 
 
@@ -55,8 +54,8 @@ void generateReport(char *target) {
  
 	qsort(fileCountArray, nbFiles, sizeof(fileCountArray[0]), compareFileCount);	
 
-	for (int ix = 0;  (ix < nbFiles);  ix += 1) {
-		if(fileCountArray[ix].nbOfChanges == 0) 
+	for (int i = 0; i < nbFiles; i++ ) {
+		if(fileCountArray[i].nbOfChanges == 0) 
 			break;
                 printf("%d		%s\n", fileCountArray[ix].nbOfChanges, fileCountArray[ix].fileName + 2);
         }
