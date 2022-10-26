@@ -12,9 +12,9 @@
 #ifndef TRAVERSAL_H_
 #define TRAVERSAL_H_
 
-void add_fname_to_fcount_array(char *s, int c);
+void addFileNameToFileCountArray(char * filePath, int counter);
 
-void traverseDirectory(char *current, char *target);
+void traverseDirectory(char *current, char *targetString);
 
 #endif /* TRAVERSAL_H_ */
 

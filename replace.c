@@ -29,15 +29,22 @@ int main(int argc, char* argv[])
 		return EXIT_FAILURE;
 	}
 	
-	char* target = argv[1]; //target string
+	char* targetString = argv[1]; //target string
 	
 	printf("------------- Welcome to the Word Capitalizer Program -------------\n\n");
-	printf("This program will convert the provided word in capital letter\n of every .txt file in the directory and subfolders of the program\n\n");
-
+	printf("This program will convert the provided word in capital letter\nof every .txt file in the directory and subfolders of the program\n\n");
+	printf("----------------------------  Starting ----------------------------\n\n");
 	
-	traverseDirectory(".", target); //calls traverseDirectory
 
-	generateReport(target); //generates report
+	allocatedSize = 32;
+	fileCountArray = (struct file_count*)malloc(allocatedSize * sizeof(struct file_count));
+	if (fileCountArray == NULL) {
+		fprintf(stderr, "Malloc error for fileCountArray");
+	}
+
+	traverseDirectory(".", targetString); //calls traverseDirectory
+
+	generateReport(targetString); //generates report
 	
 	freeReport();  //free memory
 

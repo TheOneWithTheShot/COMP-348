@@ -19,60 +19,41 @@
 #include "text.h"
 #include "report.h"
 
-
-void add_fname_to_fcount_array(char *s, int c) {
-        if(nbFiles == allocatedSize) {
-                struct file_count *tmp_fcount_array = realloc(fileCountArray, 2*allocatedSize*sizeof(struct file_count));
-
-                if(tmp_fcount_array == NULL) {
-                        fprintf(stderr, "Too many file counter structs, skipping %s", s);
-                        return;
-                }
-
-                fileCountArray = tmp_fcount_array;
-                allocatedSize *= 2;
-        }
-
-        fileCountArray[nbFiles].fileName = s;
-        fileCountArray[nbFiles].nbOfChanges = c;
-        nbFiles++;
-}
-
-void traverseDirectory(char *current, char *target) 
+void traverseDirectory(char *current, char *targetString) 
 {
-	DIR *dirp;
+	DIR* d; 
 	struct dirent *dp;
 
-	//Error checking and initializing dirp
-	if(!(dirp = opendir(current))) {
-		fprintf(stderr, "null directory error\n");
+	//initiliaze d and make sure that there is no error
+	if(!(d = opendir(current))) {
+		fprintf(stderr, "invalid/null directory\n");
 		return; 
 	}
 
-	// Iterating through the current directory, one file at a time
+	// iterate through every files in the current directory
 	do {
-		if ((dp = readdir(dirp)) != NULL) {
+		if ((dp = readdir(d)) != NULL) {
 			if((int)dp->d_type == DT_DIR) {
-				// Ignoring hidden directories.
+				// Ignores dot folders and executable
 				if(dp->d_name[0] != '.'){
-					char recurse_into[strlen(current)+strlen(dp->d_name)+2];
-					sprintf(recurse_into, "%s/%s", current, dp->d_name);
-					// recursive call
-					traverseDirectory(recurse_into, target);
+					char recurseIn[strlen(current)+strlen(dp->d_name)+2];
+					sprintf(recurseIn, "%s/%s", current, dp->d_name);
+					// calls the method recursively
+					traverseDirectory(recurseIn, targetString);
 				}
 
 			} else if ((int)dp->d_type == DT_REG) {
+				// .txt found and is added to fileCountArray
 				if(!(strcmp(&(dp->d_name[strlen(dp->d_name) - 4]), ".txt"))) {
-					//Found a .txt file, add to fcount array.
-					char *file_loc = malloc(strlen(current)+strlen(dp->d_name)+2);
-					if(file_loc == NULL) {
+					char *filePath = malloc(strlen(current)+strlen(dp->d_name)+2);
+					if(filePath == NULL) {
 						fprintf(stderr, "Malloc error\n");
 					}
-					sprintf(file_loc, "%s/%s", current, dp->d_name);
+					sprintf(filePath, "%s/%s", current, dp->d_name);
 					
-					//Call to replace() which returns count of replacements.
-					int count = replace(file_loc, target);
-					add_fname_to_fcount_array(file_loc, count);	
+					//counter of replaced target string
+					int counter = replace(filePath, targetString);
+					addFileNameToFileCountArray(filePath, counter);	
 				}
 			} else {
 				printf("ignoring unrecognized filetype for file %s", dp->d_name);
@@ -80,6 +61,24 @@ void traverseDirectory(char *current, char *target)
 		}
 	} while (dp != NULL);
 	
-	closedir(dirp);
+	closedir(d);
 	return;
+}
+
+void addFileNameToFileCountArray(char* filePath, int counter) {
+	if (nbFiles == allocatedSize) {
+		struct file_count* tmp_fcount_array = realloc(fileCountArray, 2 * allocatedSize * sizeof(struct file_count));
+
+		if (tmp_fcount_array == NULL) {
+			fprintf(stderr, "Too many file counter structs, skipping %s", filePath);
+			return;
+		}
+
+		fileCountArray = tmp_fcount_array;
+		allocatedSize *= 2;
+	}
+
+	fileCountArray[nbFiles].fileName = filePath;
+	fileCountArray[nbFiles].nbOfChanges = counter;
+	nbFiles++;
 }

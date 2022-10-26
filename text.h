@@ -12,10 +12,10 @@
 #ifndef TEXT_H_
 #define TEXT_H_
 
-int replace(char *fileName, char *target);
+int replace(char *fileName, char *targetString);
 
-void s_to_lower(char *s);
-void s_to_uppwer(char *s);
+void stringToLowercase(char * String);
+void stringToUppercase(char * String);
 
 #endif /* TEXT_H_ */
 

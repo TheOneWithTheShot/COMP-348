@@ -24,6 +24,7 @@ struct file_count* fileCountArray = NULL;
 
 
 
+//compares the file_count structs
 int compareFileCount(const void *a, const void *b) {
 	struct file_count *fcount_a = (struct file_count *)a;
 	struct file_count *fcount_b = (struct file_count *)b;
@@ -31,34 +32,32 @@ int compareFileCount(const void *a, const void *b) {
 	return((fcount_b->nbOfChanges)-(fcount_a->nbOfChanges));	
 }
 
+//generates the report
+void generateReport(char *targetString) {
 
-void generateReport(char *target) {
-
-	allocatedSize = 32;
-
-	fileCountArray = (struct file_count*)malloc(allocatedSize * sizeof(struct file_count));
-	if (fileCountArray == NULL) {
-		fprintf(stderr, "Malloc error for fileCountArray");
-	}
-
-
-	printf("The program will look for instances of the string:  %s\n\n", target);
+	printf("The program will look for instances of the string:  %s\n\n", targetString);
 
 	char cwd[1024];
 	if(getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("Search begins in current folder: %s\n\n\n", cwd);
+		printf("The search will start from the following folder: %s\n\n\n", cwd);
 	
-	printf("** Search Report **\n\n");
+	printf("The modifications have been succesfully done.\n\n\n");
+	printf("-------------------------- Process Report -------------------------\n\n\n");
 
-	printf("Updates		File Name\n");
+	printf("\tNb of updates		File modified (relative path)\n");
+	printf("\t-----------------------------------------------------\n");
  
-	qsort(fileCountArray, nbFiles, sizeof(fileCountArray[0]), compareFileCount);	
+	qsort(fileCountArray, nbFiles, sizeof(fileCountArray[0]), compareFileCount); //sort
 
+	//print the results for each txt file found and modified
 	for (int i = 0; i < nbFiles; i++ ) {
 		if(fileCountArray[i].nbOfChanges == 0) 
 			break;
-                printf("%d		%s\n", fileCountArray[i].nbOfChanges, fileCountArray[i].fileName + 2);
+                printf("\t%d		        %s\n", fileCountArray[i].nbOfChanges, fileCountArray[i].fileName + 2);
         }
+
+
+	printf("\n\nThe program has finished. Have a great day.\n\n");
 }	
 
 //free memory
@@ -67,6 +66,6 @@ void freeReport() {
 		for (int i = 0; (i < nbFiles); i++) {
 			free(fileCountArray[i].fileName);
 		}
-		free(fileCountArray);
+	free(fileCountArray);
 	}
 }

@@ -12,10 +12,6 @@
 #ifndef REPORT_H_ 
 #define REPORT_H_
 
-void generateReport(char *target);
-
-void freeReport();
-
 //struct that holds 2 variables, nbOfChanges & fileName
 struct file_count
 {
@@ -28,5 +24,10 @@ extern struct file_count* fileCountArray;
 
 extern int nbFiles;
 extern int allocatedSize;
+
+
+void generateReport(char *targetString);
+
+void freeReport();
 
 #endif /* REPORT_H_ */
