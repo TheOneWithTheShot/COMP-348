@@ -41,20 +41,32 @@ void generateReport(char *targetString) {
 	if(getcwd(cwd, sizeof(cwd)) != NULL)
 		printf("The search will start from the following folder: %s\n\n\n", cwd);
 	
-	printf("The modifications have been succesfully done.\n\n\n");
+	printf("The process has finished.\n\n\n");
 	printf("-------------------------- Process Report -------------------------\n\n\n");
-
-	printf("\tNb of updates		File modified (relative path)\n");
-	printf("\t-----------------------------------------------------\n");
  
 	qsort(fileCountArray, nbFiles, sizeof(fileCountArray[0]), compareFileCount); //sort
 
-	//print the results for each txt file found and modified
-	for (int i = 0; i < nbFiles; i++ ) {
-		if(fileCountArray[i].nbOfChanges == 0) 
-			break;
-                printf("\t%d		        %s\n", fileCountArray[i].nbOfChanges, fileCountArray[i].fileName + 2);
-        }
+	//Check if at least one file has been modified
+	int checkIfNoModification = 0;
+	for (int i = 0; i < nbFiles; i++) {
+		checkIfNoModification += fileCountArray[i].nbOfChanges;
+	}
+
+	if (checkIfNoModification == 0) {
+		printf("No files have been changed. The reason could be that there was no occurence\n");
+		printf("of the target string or that the word was already capitalized in every.txt file.\n\n\n");
+	} else {
+
+		printf("\tNb of updates		File modified (relative path)\n");
+		printf("\t-----------------------------------------------------\n");
+
+		//print the results for each txt file found and modified
+		for (int i = 0; i < nbFiles; i++) {
+			if (fileCountArray[i].nbOfChanges == 0)
+				break;
+			printf("\t%d		        %s\n", fileCountArray[i].nbOfChanges, fileCountArray[i].fileName + 2);
+		}
+	}
 
 
 	printf("\n\nThe program has finished. Have a great day.\n\n");
