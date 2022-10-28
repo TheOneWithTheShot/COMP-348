@@ -1,9 +1,7 @@
 /**
-* @file report.c
-* @author Xavier Guertin
+* File: report.c
+* Name: Xavier Guertin
 * Student ID: 40213525
-* @date 8 october 2022
-*
 * 
 * file that creates the report. There are 3 methods.
 * 1. compareFileCount : compares the file_count structs

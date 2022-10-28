@@ -1,9 +1,7 @@
 /**
-* @file traversal.h
-* @author Xavier Guertin
+* File: traversal.h
+* Name: Xavier Guertin
 * Student ID: 40213525
-* @date 8 october 2022
-*
 *
 * traversal.c's header file
 */

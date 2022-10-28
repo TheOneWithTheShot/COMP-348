@@ -1,9 +1,7 @@
 /**
-* @file text.c
-* @author Xavier Guertin
+* File: text.c
+* Name: Xavier Guertin
 * Student ID: 40213525
-* @date 8 october 2022
-*
 *
 * the function replace() receives a filename and a target string
 * it finds all the ocurrences of the string in the .txt file and

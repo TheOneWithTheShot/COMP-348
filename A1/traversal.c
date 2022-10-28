@@ -1,9 +1,7 @@
 /**
-* @file traversal.c
-* @author Xavier Guertin
+* File: traversal.c
+* Name: Xavier Guertin
 * Student ID: 40213525
-* @date 8 october 2022
-*
 *
 * file that contains the function traverseDirectory()
 * It recurses through a directory and calls the replace function

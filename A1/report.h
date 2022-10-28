@@ -1,9 +1,7 @@
 /**
-* @file report.h
-* @author Xavier Guertin
+* File: report.h
+* Name: Xavier Guertin
 * Student ID: 40213525
-* @date 8 october 2022
-*
 * 
 * report.c's header file
 */

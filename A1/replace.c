@@ -1,9 +1,7 @@
 /**
-* @file replace.c
-* @author Xavier Guertin
+* File: replace.c
+* Name: Xavier Guertin
 * Student ID: 40213525
-* @date 8 october 2022
-*
 * 
 * file that contains the main method aswell as the 
 * methods to handle the command line arguments
