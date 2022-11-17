@@ -1,163 +1,164 @@
-import socket
-import readDataFile
+"""
+@author: Xavier Guertin
+Student Number: 40213525
+Due Date: 24/11/2022
+Class: server.py
+"""
 
+
+import json
+import socket
+import extractTextFile
+
+
+# Start server loop
 def startServerLoop():
     # Create socket obj
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((socket.getsockname(), 9999)) # Connect to port 9999
+    s.bind((socket.gethostname(), 9999))  # Connect to port 9999
     s.listen(5)
 
     # Infinite Loop to always have the server open
     while True:
         clientSocket, address = s.accept()
-        print(f"connection from {address} has been established!")
-        clientSocket.send(bytes("Welcome to the server!", "utf-8"))
-
         msg = clientSocket.recv(1024)
         parsedCommand = (msg.decode('utf-8')).split('|')
 
-        response = processCommand(parsedCommand)
+        response = executeOption(parsedCommand)
         clientSocket.send(response.encode('utf-8'))
         clientSocket.close()
 
+
+# Function that will call other functions to extract
+# the data from the data.txt file and to convert it
+# into a dictionary
 def importDataOnDatabase():
-    dbList = readDataFile.loadFile("data.txt")
-    dbDictionary = readDataFile.processListToDict(dbList)
-    return dbDictionary
+    dataList = extractTextFile.importFile("data.txt")
+    dataDict = convertListToDictionary(dataList)
+    return dataDict
 
 
-def processCommand(newCommand):
-    UNRECONGIZED_COMMAND = 'Unrecognized Command'
-    response = ''
+# Function that converts the data list into a dictionary
+def convertListToDictionary(dataList):
+    dataDict = {}
+    for x in dataList:
+        key = x[0]
+        value = [x[1], x[2], x[3]]
+        dataDict[key] = value
+    return dataDict
 
-    if len(newCommand) == 2:  # it's either find, delete or getAllData
-        if newCommand[0] == 'find':
-            print(str(time.ctime()) + ' - ' + 'Find command')
-            foundEntry = find(newCommand[1])
-            if foundEntry == None:
-                response = 'Server response: ' + newCommand[1] + ' not found in database'
-            else:
-                response = 'Server response: ' + foundEntry[0] + '|' + foundEntry[1] + '|' + foundEntry[2] + '|' + \
-                           foundEntry[3]
 
-        elif newCommand[0] == 'delete':
-            print(str(time.ctime()) + ' - ' + 'Delete command')
-            response = delete(newCommand[1])
+# Based on the request from the client, the server will execute the request
+# and send back a result to the client.
+def executeOption(newRequest):
+    if newRequest[0] == 'find':
+        print('Finding the following user: ' + newRequest[1])
+        result = findUser(newRequest[1])
 
-        elif newCommand[0] == 'getAllData':
-            print(str(time.ctime()) + ' - ' + 'GetAllData command')
-            response = json.dumps({'data': dbase_asDict})
-            # response = jsonPackage.encode('utf-8')
+    elif newRequest[0] == 'add':
+        print('Executed the import of a new user: ' + newRequest[1])
+        result = addUser(newRequest[1], newRequest[2], newRequest[3], newRequest[4])
 
+    elif newRequest[0] == 'delete':
+        print('Executed deletion of: ' + newRequest[1])
+        result = deleteUser(newRequest[1])
+
+    elif newRequest[0] == 'update':
+        if newRequest[2] == 'age':
+            print('Executed age update of: ' + newRequest[1])
+            result = updateUserAge(newRequest[1], newRequest[3])
+        elif newRequest[2] == 'address':
+            print('Executed address update of: ' + newRequest[1])
+            result = updateUserAddress(newRequest[1], newRequest[3])
+        elif newRequest[2] == 'phone':
+            print('Executed phone update of: ' + newRequest[1])
+            result = updateUserPhone(newRequest[1], newRequest[3])
         else:
-            print(str(time.ctime()) + ' - ' + 'Unknown command')
-            response = UNRECONGIZED_COMMAND
+            print('Unknown option')
+            result = 'Unknown Option'
 
-    elif len(newCommand) == 3:
-        print(str(time.ctime()) + ' - ' + 'Unknown command')
-        response = UNRECONGIZED_COMMAND
-
-    elif len(newCommand) == 4:
-
-        if newCommand[0] == 'update':
-            if (newCommand[2] == 'age'):
-                print(str(time.ctime()) + ' - ' + 'Update age command')
-                response = updateAge(newCommand[1], newCommand[3])
-            elif (newCommand[2] == 'address'):
-                print(str(time.ctime()) + ' - ' + 'Update address command')
-                response = updateAddress(newCommand[1], newCommand[3])
-            elif (newCommand[2] == 'phone'):
-                print(str(time.ctime()) + ' - ' + 'Update phone number command')
-                response = updatePhone(newCommand[1], newCommand[3])
-            else:
-                print(str(time.ctime()) + ' - ' + 'Unknown command')
-                response = UNRECONGIZED_COMMAND
-
-        else:
-            print(str(time.ctime()) + ' - ' + 'Unknown command')
-            response = UNRECONGIZED_COMMAND
-
-    elif len(newCommand) == 5:
-
-        if newCommand[0] == 'add':
-            print(str(time.ctime()) + ' - ' + 'Add new customer command')
-            response = add(newCommand[1], newCommand[2], newCommand[3], newCommand[4])
-
-        else:
-            print(str(time.ctime()) + ' - ' + 'Unknown command')
-            response = UNRECONGIZED_COMMAND
+    elif newRequest[0] == 'printReport':
+        print('Executed printReport')
+        # serializes data dictionary obj into a formatted str and sorts it
+        result = json.dumps({'data': dataDictionary}, sort_keys=True)
 
     else:
-        print(str(time.ctime()) + ' - ' + 'Unknown command')
-        response = UNRECONGIZED_COMMAND
+        print('Unknown option')
+        result = 'Unknown Option'
 
-    return response
-
-
-def find(name):
-    if name in dbase_asDict:
-        queryDbase = dbase_asDict[name]
-        result = [name, queryDbase[0], queryDbase[1], queryDbase[2]]
-    else:
-        result = None
     return result
 
 
-def add(name, age, address, phoneNumber):
-    global dbase_asDict
-    if name in dbase_asDict:
-        result = 'Customer already exists.'
+# find user
+def findUser(name):
+    if name in dataDictionary:
+        query = dataDictionary[name]
+        result = 'The user was found with the following information: \n' + name + ', ' + query[0] + ', ' + query[1] + \
+                 ', ' + query[2]
     else:
-        dbase_asDict[name] = [age, address, phoneNumber]
-        result = 'Customer has been added!'
+        result = "The user was not found, try again."
     return result
 
 
-def delete(name):
-    global dbase_asDict
-    if name in dbase_asDict:
-        dbase_asDict.pop(name, None)
-        result = "Customer was removed!"
+# add user
+def addUser(name, age, address, phoneNb):
+    if name in dataDictionary:
+        result = "The user already exists, try again."
     else:
-        result = "Customer not found."
+        dataDictionary[name] = [age, address, phoneNb]
+        result = name + ' has been added.'
     return result
 
 
-def updateAge(name, age):
-    global dbase_asDict
-    if name in dbase_asDict:
-        origEntry = dbase_asDict[name]
+# delete user
+def deleteUser(name):
+    global dataDictionary
+    if name in dataDictionary:
+        dataDictionary.pop(name, None)
+        result = "User was deleted."
+    else:
+        result = "The user was not found, try again."
+    return result
+
+
+# update the user's age
+def updateUserAge(name, age):
+    global dataDictionary
+    if name in dataDictionary:
+        origEntry = dataDictionary[name]
         newEntry = [age, origEntry[1], origEntry[2]]
-        dbase_asDict[name] = newEntry
-        result = "Customer age was updated!"
+        dataDictionary[name] = newEntry
+        result = name + "'s age was updated."
     else:
-        result = "Customer not found."
+        result = "The user was not found, try again."
     return result
 
 
-def updateAddress(name, address):
-    global dbase_asDict
-    if name in dbase_asDict:
-        origEntry = dbase_asDict[name]
+# update the user's address
+def updateUserAddress(name, address):
+    global dataDictionary
+    if name in dataDictionary:
+        origEntry = dataDictionary[name]
         newEntry = [origEntry[0], address, origEntry[2]]
-        dbase_asDict[name] = newEntry
-        result = "Customer\'s address was updated!"
+        dataDictionary[name] = newEntry
+        result = name + "'s address was updated."
     else:
-        result = "Customer not found."
+        result = "The user was not found, try again."
     return result
 
 
-def updatePhone(name, phone):
-    global dbase_asDict
-    if name in dbase_asDict:
-        origEntry = dbase_asDict[name]
-        newEntry = [origEntry[0], origEntry[1], phone]
-        dbase_asDict[name] = newEntry
-        result = "Customer\'s phone number was updated!"
+# update the user's phone number
+def updateUserPhone(name, phoneNb):
+    global dataDictionary
+    if name in dataDictionary:
+        origEntry = dataDictionary[name]
+        newEntry = [origEntry[0], origEntry[1], phoneNb]
+        dataDictionary[name] = newEntry
+        result = name + "'s phone number was updated."
     else:
-        result = "Customer not found."
+        result = "The user was not found, try again."
     return result
 
 
-dbDictionary = importDataOnDatabase()
+dataDictionary = importDataOnDatabase()
 startServerLoop()
