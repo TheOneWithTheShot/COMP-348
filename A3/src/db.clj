@@ -2,6 +2,9 @@
   (:require app)
   (:gen-class))
 
+(def nbOfEntriesCust
+  (count app/custDB))
+
 ;;Prints the customers entries
 (defn printCustomerTable
   [entries]
@@ -11,9 +14,8 @@
   (println (format " ID |      %-10s |       %-14s |  %-5s " "Name" "Address" "Phone Number"))
   (println "=============================================================")
   
-  (def num-entries (count entries))
   (loop [count 0]
-    (if (= count num-entries)
+    (if (= count nbOfEntriesCust)
       (println "\nAll the entries have been printed")
       (do
         (println (format " %s  | %-15s | %-20s | %-10s    "
@@ -24,6 +26,9 @@
                          ))
         (recur (inc count))))))
 
+(def nbOfEntriesProd 
+  (count app/prodDB))
+
 ;;Prints the product entries
 (defn printProductTable
   [entries]
@@ -33,9 +38,8 @@
   (println (format " ID |    %-6s  |  %5s" "Name" "Price"))
   (println "===========================")
   
-  (def num-entries (count entries))
   (loop [count 0]
-    (if (= count num-entries)
+    (if (= count nbOfEntriesProd)
       (println "\nAll the entries have been printed")
       (do
         (println (format " %s  | %-10s | %s"
@@ -48,35 +52,47 @@
 
 (defn findSalesEntryForCustomerSearch
   [count]
-  
   (- (read-string (nth (nth (nth app/salesDB count) 0) 1)) 1)
 )
 
 (defn findSalesEntryForProductSearch
   [count]
-
   (- (read-string (nth (nth (nth app/salesDB count) 0) 2)) 1)
 )
+
+(def nbOfEntriesSales
+  (count app/salesDB))
 
 (defn printSalesTable
   [entries]
 
-  (println "\n                       Sales table")
-  (println "\n===========================================================")
-  (println (format " ID |      %-10s |       %-14s | %-10s" "Name" "Product" "Item Count"))
-  (println "===========================================================")
-
-  (def nbOfEntries (count entries)) 
+  (println "\n                   Sales table")
+  (println "\n==================================================")
+  (println (format " ID |      %-10s |   %-9s | %-10s" "Name" "Product" "Item Count"))
+  (println "==================================================")
   
   (loop [count 0]
-    (if (= count nbOfEntries)
+    (if (= count nbOfEntriesSales)
       (println "\nAll the entries have been printed")
       (do
-        (println (format " %s  | %-15s | %-20s | %s"
+        (println (format " %s  | %-15s | %-11s | %s"
                          (nth (nth (nth entries count) 0) 0)  ;salesID
                          (nth (nth (nth app/custDB (findSalesEntryForCustomerSearch count)) 0) 1)  ;custID
                          (nth (nth (nth app/prodDB (findSalesEntryForProductSearch count)) 0) 1)  ;prodID
                          (nth (nth (nth entries count) 0) 3)  ;itemCount
                          ))
-        (recur (inc count))))))
+        (recur (inc count)))))
+)
 
+(defn checkIfExists
+  [name]
+    (some #(= name %) app/custDB))
+
+(defn findTotalSale
+  [name]
+  (println "Name provided:" name)
+  
+  (if (checkIfExists name)
+    ()
+    (println "The customer does not exist. Try again."))
+)

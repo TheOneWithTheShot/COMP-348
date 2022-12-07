@@ -13,7 +13,7 @@
   (println "  5. Total Sales For Product  ")
   (println "  6. Exit                     ")
   (println "------------------------------")
-  (println "Select an option:\n"))
+  (print "Select an option: "))
 
 
 (defn continue []
@@ -22,37 +22,43 @@
 
 
 (defn executionUserChoice [option]
-  (when (= option "1") 
-     (db/printCustomerTable app/custDB)
-     (continue))
+  (when (= option "1")
+    (println "1\n")
+    (db/printCustomerTable app/custDB)
+    (continue))
   
-  (when (= option "2") 
-     (db/printProductTable app/prodDB)
-     (continue))
+  (when (= option "2")
+    (println "2\n")
+    (db/printProductTable app/prodDB)
+    (continue))
   
-  (when (= option "3") 
-     (db/printSalesTable app/salesDB)
-     (continue))
+  (when (= option "3")
+    (println "3\n")
+    (db/printSalesTable app/salesDB)
+    (continue))
   
-  (when (= option "4") 
-     (println "Not working")
-     (continue))
+  (when (= option "4")
+    (println "4\n")
+    (println "What is the name of the customer you want to know the total sale.")
+    (db/findTotalSale (read-line))
+    (continue))
   
-  (when (= option "5") 
-     (println "Not working")
-     (continue)))
+  (when (= option "5")
+    (println "5\n")
+    (println "Not working")
+    (continue)))
   
 
 
-(defn menuLoop [exit]
+(defn menuLoop []
   (display-menu)
   (def choice (read-line))
   
   (executionUserChoice choice)
   
   (loop [count 0]
-    (if (= choice exit)
-     (println "Good-Bye!")
+    (if (= choice 6)
+     (println "The program is exiting. Good bye.")
      (do
          (display-menu)
          (def choice (read-line))
@@ -63,6 +69,6 @@
 
 (defn -main []
   (println "Entering main program")
-  (menuLoop "6"))
+  (menuLoop))
 
 (-main)
