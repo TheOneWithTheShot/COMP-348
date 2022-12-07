@@ -1,4 +1,0 @@
-giraffe|120|leaves
-lion|340|sheep
-cat|7|mice
-dog|30|kibble

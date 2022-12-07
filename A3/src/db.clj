@@ -1,78 +1,82 @@
 (ns db
-	(:require [clojure.string :as str]))
+  (:require app)
+  (:gen-class))
 
-(defn print-entries-customer 
-	[entries]
-	;(println entries)
-	;(println (count entries) )
-	(def num-entries (count entries))
-	(loop [count 0]
-		(if (= count num-entries)	
-		(println "Listing complete!")
-		(do
-			(println (format "%s  | %-20s | %-30s | %-6s" 
-				(nth (nth (nth entries count) 0) 0 )  ;id
-				(nth (nth (nth entries count) 0) 1 )  ;name
-				(nth (nth (nth entries count) 0) 2 )  ;address
-				(nth (nth (nth entries count) 0) 3 )  ;phone number
-				))
-			(recur (inc count)))))
+;;Prints the customers entries
+(defn printCustomerTable
+  [entries]
 
-	)
+  (println "\n                      Customer table")
+  (println "\n=============================================================")
+  (println (format " ID |      %-10s |       %-14s |  %-5s " "Name" "Address" "Phone Number"))
+  (println "=============================================================")
+  
+  (def num-entries (count entries))
+  (loop [count 0]
+    (if (= count num-entries)
+      (println "\nAll the entries have been printed")
+      (do
+        (println (format " %s  | %-15s | %-20s | %-10s    "
+                         (nth (nth (nth entries count) 0) 0)  ;custID
+                         (nth (nth (nth entries count) 0) 1)  ;name
+                         (nth (nth (nth entries count) 0) 2)  ;address
+                         (nth (nth (nth entries count) 0) 3)  ;phoneNumber
+                         ))
+        (recur (inc count))))))
 
-(defn read-file-customer
-	"reads given file"
-	[filename]
-	(let [file-contents (slurp filename)]
-		(def file-contents-split (str/split-lines file-contents))
-	)
-	
-	(def entries 
-		(for [line file-contents-split]
-			[(str/split line #"\|")]
-		)
-	)
+;;Prints the product entries
+(defn printProductTable
+  [entries]
 
-	(println (format "Id | %-20s | %-30s | %-6s" "Name" "Address" "Phone#"))
-	(println "---+----------------------+--------------------------------+------------")
+  (println "\n     Product Table")
+  (println "\n===========================")
+  (println (format " ID |    %-6s  |  %5s" "Name" "Price"))
+  (println "===========================")
+  
+  (def num-entries (count entries))
+  (loop [count 0]
+    (if (= count num-entries)
+      (println "\nAll the entries have been printed")
+      (do
+        (println (format " %s  | %-10s | %s"
+                         (nth (nth (nth entries count) 0) 0)  ;prodID
+                         (nth (nth (nth entries count) 0) 1)  ;itemDescription
+                         (nth (nth (nth entries count) 0) 2)  ;unitCost
+                         ))
+        (recur (inc count))))))
 
-	(print-entries-customer entries)
+
+(defn findSalesEntryForCustomerSearch
+  [count]
+  
+  (- (read-string (nth (nth (nth app/salesDB count) 0) 1)) 1)
 )
 
-(defn print-entries-product 
-	[entries]
-	;(println entries)
-	;(println (count entries) )
-	(def num-entries (count entries))
-	(loop [count 0]
-		(if (= count num-entries)	
-		(println "Listing complete!")
-		(do
-			(println (format "%s  | %-20s | %4s" 
-				(nth (nth (nth entries count) 0) 0 )  ;id
-				(nth (nth (nth entries count) 0) 1 )  ;name
-				(nth (nth (nth entries count) 0) 2 )  ;phone number
-				))
-			(recur (inc count)))))
+(defn findSalesEntryForProductSearch
+  [count]
 
-	)
-
-(defn read-file-product
-	"reads given file"
-	[filename]
-	(let [file-contents (slurp filename)]
-		(def file-contents-split (str/split-lines file-contents))
-	)
-	
-	(def entries 
-		(for [line file-contents-split]
-			[(str/split line #"\|")]
-		)
-	)
-
-	(println (format "Id | %-20s | %4s" "Name" "Price"))
-	(println "---+-------------------------------")
-
-	(print-entries-product entries)
+  (- (read-string (nth (nth (nth app/salesDB count) 0) 2)) 1)
 )
+
+(defn printSalesTable
+  [entries]
+
+  (println "\n                       Sales table")
+  (println "\n===========================================================")
+  (println (format " ID |      %-10s |       %-14s | %-10s" "Name" "Product" "Item Count"))
+  (println "===========================================================")
+
+  (def nbOfEntries (count entries)) 
+  
+  (loop [count 0]
+    (if (= count nbOfEntries)
+      (println "\nAll the entries have been printed")
+      (do
+        (println (format " %s  | %-15s | %-20s | %s"
+                         (nth (nth (nth entries count) 0) 0)  ;salesID
+                         (nth (nth (nth app/custDB (findSalesEntryForCustomerSearch count)) 0) 1)  ;custID
+                         (nth (nth (nth app/prodDB (findSalesEntryForProductSearch count)) 0) 1)  ;prodID
+                         (nth (nth (nth entries count) 0) 3)  ;itemCount
+                         ))
+        (recur (inc count))))))
 

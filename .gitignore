@@ -6,3 +6,6 @@
 /.vscode
 /A2/.idea
 .idea
+/.clj-kondo
+/.calva
+/.lsp

@@ -1,73 +1,68 @@
 (ns menu
-	(:require [db :as db]))
+  (:require [db])
+  (:require [app])
+  (:gen-class)) 
 
 (defn display-menu []
-	(repeatedly 80 #(println "."))
-	(println "********* Sales Menu *********")
-	(println "------------------------------")
-	(println "  1. Display Customer Table   ")
-	(println "  2. Display Product Table    ")
-	(println "  3. Display Sales Table      ")
-	(println "  4. Total Sales for Customer ")
-	(println "  5. Total Sales for Product  ")
-	(println "  6. Exit                     ")
-	(println "------------------------------")
-)
+  (println "\n\n********* Sales Menu *********")
+  (println "------------------------------")
+  (println "  1. Display Customer Table   ")
+  (println "  2. Display Product Table    ")
+  (println "  3. Display Sales Table      ")
+  (println "  4. Total Sales For Customer ")
+  (println "  5. Total Sales For Product  ")
+  (println "  6. Exit                     ")
+  (println "------------------------------")
+  (println "Select an option:\n"))
 
-(defn press-enter-to-continue []
-	(println "Press Enter to continue")
-	(read-line)
-)
 
-(defn process-choice [choice]
-	(when (= choice "1") 
-		(db/read-file-customer "cust.txt")
-		(press-enter-to-continue)
-	)
-	(when (= choice "2") 
-		(db/read-file-product "prod.txt")
-		(press-enter-to-continue)
-	)
-	(when (= choice "3") 
-		(println "Under Construction")
-		(press-enter-to-continue)
-	)
-	(when (= choice "4") 
-		(println "Under Construction")
-		(press-enter-to-continue)
-	)
-	(when (= choice "5") 
-		(println "Under Construction")
-		(press-enter-to-continue)
-	)
-)
+(defn continue []
+  (println "Press Enter to continue")
+  (read-line))
 
-(defn loop-display-menu [exit-option]
-	(display-menu)
-	(def choice (read-line))
-	
-	(process-choice choice)
-	
-	(loop [count 0]
-	  (if (= choice exit-option)
-		(println "Good-Bye!")
-		(do
-		  (display-menu)
-		  (def choice (read-line))
-		
-		  (process-choice choice)
 
-		  (recur (inc count))))))
+(defn executionUserChoice [option]
+  (when (= option "1") 
+     (db/printCustomerTable app/custDB)
+     (continue))
+  
+  (when (= option "2") 
+     (db/printProductTable app/prodDB)
+     (continue))
+  
+  (when (= option "3") 
+     (db/printSalesTable app/salesDB)
+     (continue))
+  
+  (when (= option "4") 
+     (println "Not working")
+     (continue))
+  
+  (when (= option "5") 
+     (println "Not working")
+     (continue)))
+  
 
-(defn -main [ ]
-	(println "Entering main program")
-	;(display-menu)
-	(loop-display-menu "6")
-	;(def choice (read-line))
-	;(println choice)
-	;(db/read-file-product "prod.txt")
-)
 
+(defn menuLoop [exit]
+  (display-menu)
+  (def choice (read-line))
+  
+  (executionUserChoice choice)
+  
+  (loop [count 0]
+    (if (= choice exit)
+     (println "Good-Bye!")
+     (do
+         (display-menu)
+         (def choice (read-line))
+    
+         (executionUserChoice choice)
+
+         (recur (inc count))))))
+
+(defn -main []
+  (println "Entering main program")
+  (menuLoop "6"))
 
 (-main)
-;(db/hello)
