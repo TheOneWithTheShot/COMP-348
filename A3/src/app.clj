@@ -1,5 +1,8 @@
+; Assignment 3 - COMP 348
+; @author: Xavier Guertin
+; Student ID: 40213525
+
 (ns app
-  (:require menu)
   (:require [clojure.string :as string])
   (:gen-class))
 
@@ -20,10 +23,16 @@
   [fileName]
 
   (for [line (splitContentOfFiles fileName)]
-    [(string/split line #"\|")])
+    (string/split line #"\|"))
 )
 
-  
+;Reduce the sequence of entry to get only the id and name
+(defn reduceEntry [db]
+  (reduce (fn [result entry] (assoc result (entry 1) (name (entry 0)))) {} (seq db)))
+
+;Define all data structures
+(def customersReduced (reduceEntry app/custDB))
+(def productsReduced (reduceEntry app/prodDB)) 
 (def custDB (loadData "cust.txt"))
 (def prodDB (loadData "prod.txt"))
 (def salesDB (loadData "sales.txt"))
